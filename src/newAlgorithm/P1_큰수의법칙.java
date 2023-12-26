@@ -22,18 +22,27 @@ public class P1_큰수의법칙{
         st = new StringTokenizer(br.readLine());
         for(int i=0;i<N;i++) {
             list[i] = Integer.parseInt(st.nextToken());
-            max = Math.max(max,list[i]);
-            if(max>list[i]){
-                secondMax = Math.max(secondMax,list[i]);
+            if(max<=list[i]){
+                secondMax = max;
+                max = list[i];
             }
         }//for
 
+//        sort사용
 //        Arrays.sort(list);
+//        for(int i=0;i<M;i++) {
+//            if(i%(K+1)==K) {
+//                answer+=list[N-2];
+//            }else {
+//                answer+=list[N-1];
+//            }
+//        }
+
         for(int i=0;i<M;i++) {
             if(i%(K+1)==K) {
-                answer+=list[N-2];
+                answer+=secondMax;
             }else {
-                answer+=list[N-1];
+                answer+=max;
             }
         }
         System.out.println(answer);
