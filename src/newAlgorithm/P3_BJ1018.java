@@ -5,7 +5,6 @@ import java.util.*;
 
 public class P3_BJ1018 {
     static int answer, M, N, map[][];
-    static int[][] move = {{0, 1}, {1, 0}};
 
     public static void main(String[] args) throws IOException {
         //M*N 그림 -> 8*8 검흰이 번갈아서 색칠. 
@@ -57,40 +56,41 @@ public class P3_BJ1018 {
         //그린 맵에서 BW 변경테스트
         ///왼쪽 위에서부터 확인하고 내려오니까 오른쪽이랑 아래만 확인하면 된다.
         int orig = checkMin(captureMap);
-        answer = Math.min(orig,answer);
+        answer = Math.min(orig, answer);
 
 
         //원상복구 후 첫번째 값 바꿔서 돌리기
-        for (int i=0;i<8;i++){
-            captureMap[i]=origMap[i].clone();
+        for (int i = 0; i < 8; i++) {
+            captureMap[i] = origMap[i].clone();
         }
         captureMap[0][0] = (captureMap[0][0] + 1) % 2;
         int change = checkMin(captureMap);
         //위에서 값 바꿨으니까+1;
-        if(change!=Integer.MAX_VALUE){
-            change+=1;
+        if (change != Integer.MAX_VALUE) {
+            change += 1;
         }
-        answer = Math.min(change,answer);
+        answer = Math.min(change, answer);
     }//checkMin
 
-    static int checkMin(int[][] captureMap){
-        int min=0;
+    static int checkMin(int[][] captureMap) {
+        int min = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                for (int k = 0; k < 2; k++) {
-                    int nextR = i + move[k][0];
-                    int nextC = j + move[k][1];
+                //일단 오른쪽만 확인하고, j가 0이면 아래도 확인
+                int nextR = i + 1;
+                int nextC = j + 1;
+                if (j == 0 && nextR < 8 && captureMap[nextR][j] == captureMap[i][j]) {
+                    captureMap[nextR][j] = (captureMap[nextR][j] + 1) % 2;
+                    min++;
 
-                    if ( nextR<8 && nextC<8 && captureMap[nextR][nextC] == captureMap[i][j]) {
-                        //우,하 바꾸기
-                        captureMap[nextR][nextC] = (captureMap[nextR][nextC] + 1) % 2;
-                        min++;
-                        //지금 세고 있는 값이 기존에 나온 값보다 크면 더 볼 필요 없음.
-                        if(min>=answer){
-                            return Integer.MAX_VALUE;
-                        }
-                    }//if
-                }//for3
+                }
+                if (nextC < 8 && captureMap[i][nextC] == captureMap[i][j]) {
+                    captureMap[i][nextC] = (captureMap[i][nextC] + 1) % 2;
+                    min++;
+                }
+                if (min >= answer) {
+                    return Integer.MAX_VALUE;
+                }
             }//for2
         }//for1
         return min;
